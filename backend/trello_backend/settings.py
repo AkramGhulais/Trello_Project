@@ -14,18 +14,33 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # استخدام متغيرات البيئة للإعدادات الحساسة
 from decouple import config
 
+# # SECURITY WARNING: keep the secret key used in production secret!
+# SECRET_KEY = config('SECRET_KEY')  # بدون قيمة افتراضية ضعيفة
+
+# # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = config('DEBUG', default=True, cast=bool)
+
+# ALLOWED_HOSTS = ['*']
+
+
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-your-secret-key-here')
+SECRET_KEY = config('SECRET_KEY')  # تأكد من أنه تم تعيينه في ملف .env
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = config('DEBUG', default=False, cast=bool)  # تأكد من أنه False في الإنتاج
 
-ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS should be properly configured in production
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
+
 
 # Application definition
 
 ROOT_URLCONF = 'trello_backend.urls'
 WSGI_APPLICATION = 'trello_backend.wsgi.application'
+
+
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -193,3 +208,5 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',
     },
 }
+
+
