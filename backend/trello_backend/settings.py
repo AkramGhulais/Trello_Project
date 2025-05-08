@@ -2,8 +2,8 @@ import os
 from pathlib import Path
 import dj_database_url
 from dotenv import load_dotenv
-
-
+from decouple import config
+import dj_database_url
 
 load_dotenv()  # لتحميل متغيرات .env
 
@@ -33,6 +33,7 @@ DEBUG = config('DEBUG', default=False, cast=bool)  # تأكد من أنه False 
 # ALLOWED_HOSTS should be properly configured in production
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
 
+DATABASE_URL = config('DATABASE_URL')
 
 # Application definition
 
@@ -97,21 +98,27 @@ TEMPLATES = [
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default='Trello_Project'),       # اسم قاعدة البيانات
-        'USER': config('DB_USER', default='postgres'),            # اسم المستخدم
-        'PASSWORD': config('DB_PASSWORD', default='postgres'),    # كلمة المرور الافتراضية
-        'HOST': config('DB_HOST', default='localhost'),         # أو عنوان الخادم
-        'PORT': config('DB_PORT', default='5432'),              # المنفذ الافتراضي لـ PostgreSQL
-        'OPTIONS': {
-            'connect_timeout': 10,
-            'client_encoding': 'UTF8'
-        },
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config('DB_NAME', default='Trello_Project'),       # اسم قاعدة البيانات
+#         'USER': config('DB_USER', default='postgres'),            # اسم المستخدم
+#         'PASSWORD': config('DB_PASSWORD', default='postgres'),    # كلمة المرور الافتراضية
+#         'HOST': config('DB_HOST', default='localhost'),         # أو عنوان الخادم
+#         'PORT': config('DB_PORT', default='5432'),              # المنفذ الافتراضي لـ PostgreSQL
+#         'OPTIONS': {
+#             'connect_timeout': 10,
+#             'client_encoding': 'UTF8'
+#         },
+#     }
+# }
 
+
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL')
+    )
+}
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -120,7 +127,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
+
+STATIC_URL = '/static/'  # المسار العام للوصول إلى الملفات الثابتة
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # المجلد الذي سيتم تجميع الملفات فيه في بيئة الإنتاج
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
