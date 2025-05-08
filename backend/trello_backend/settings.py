@@ -1,5 +1,12 @@
 import os
 from pathlib import Path
+import dj_database_url
+from dotenv import load_dotenv
+
+
+
+load_dotenv()  # لتحميل متغيرات .env
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,6 +41,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'channels',
     
+    
     # Local apps
     'organizations.apps.OrganizationsConfig',
     'users.apps.UsersConfig',
@@ -51,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'projects.middleware.ProjectErrorMiddleware',  # وسيط معالجة الأخطاء الخاص بنا
+    
 ]
 
 # Templates configuration
